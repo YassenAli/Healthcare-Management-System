@@ -74,9 +74,3 @@ Upon running the program, the following options are available to the administrat
 - Print Appointment Info (Appointment ID)
 - Write Query
 - Exit
-
-> **Note**: User Interface and Input Validation are not included in this project. The focus is on implementing the backend functionality for data management and processing.
-
----
-
-This Healthcare Management System provides a foundational framework for managing doctor and appointment records, with built-in support for efficient record storage, retrieval, and querying.
