@@ -3,7 +3,7 @@
 #include "Appointment.cpp"
 #include "FileManager.cpp"
 
-using namesapce std;
+using namespace std;
 
 void displayMenu() {
     std::cout << "1. Add New Doctor\n";
@@ -18,7 +18,7 @@ void displayMenu() {
     std::cout << "Enter choice: ";
 }
 
-int main() {
+/*int main() {
     int choice;
     displayMenu();
     std::cin >> choice;
@@ -37,5 +37,21 @@ int main() {
             // Other cases
     }
 
+    return 0;
+}*/
+int main() {
+    Doctor d("D001", "Dr. John Doe", "123 Main Street");
+    Doctor d1("D002", "Dr. John", "123 Main Street");
+    Doctor d2("D003", "Dr. Doe", "123 Main Street");
+    Doctor d3("D004", "John Doe", "123 Main Street");
+    d.addRecord();
+    d1.addRecord();
+    d2.addRecord();
+    d3.addRecord();
+    d.deleteRecord("D002");
+
+    Doctor d4("D005", "Dr. Jane ", "456 Elm Street");
+    d4.addRecord();
+    d4.updatedoc("Dr. Jane Smith", "D005");
     return 0;
 }
