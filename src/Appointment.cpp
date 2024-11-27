@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "IndexManager.h"
 
 using namespace std;
 
@@ -9,6 +10,8 @@ public:
     string appointmentID; // Primary Key
     string date;
     string doctorID;      // Secondary Key
+    IndexManager appPrimaryIndex;
+    IndexManager appSecondaryIndex;
 
     Appointment(const string &id, const string &date, const string &doctorID)
             : appointmentID(id), date(date), doctorID(doctorID) {}
@@ -21,7 +24,10 @@ public:
         }
     }
 
-    void deleteRecord(const string &id) {
+    void deleteRecord(const string &docId, const string &appId) {
         // Logic for deleting an appointment (mark with *)
+        appPrimaryIndex.deleteAppRecord(appId);
+        appSecondaryIndex.deleteAppRecordSec(docId, appId);
+
     }
 };

@@ -1,7 +1,8 @@
 #include <iostream>
-#include "Doctor.cpp"
+#include "Doctor.h"
 #include "Appointment.cpp"
 #include "FileManager.cpp"
+#include "IndexManager.h"
 
 using namespace std;
 
@@ -40,18 +41,54 @@ void displayMenu() {
     return 0;
 }*/
 int main() {
-    Doctor d("D001", "Dr. John Doe", "123 Main Street");
-    Doctor d1("D002", "Dr. John", "123 Main Street");
-    Doctor d2("D003", "Dr. Doe", "123 Main Street");
-    Doctor d3("D004", "John Doe", "123 Main Street");
+    Doctor d("D008", "Bassem", "123 Main Street");
+    Doctor d1("D002", "Hamed", "123 Main Street");
+    Doctor d2("D003", "Bassem", "123 Main Street");
+    Doctor d3("D004", "Ahmed", "123 Main Street");
     d.addRecord();
     d1.addRecord();
-    d2.addRecord();
     d3.addRecord();
-    d.deleteRecord("D002");
+    d2.addRecord();
+//    d.printMap();
+//////////////////////////////////////////////
+//    int cmd;
+//    cin >> cmd;
+//    Doctor dIn;
+//    char id[15], name[30], address[30];
+//    while (cmd != -1) {
+//        switch (cmd) {
+//            case 0:
+//                cin >> id >> name >> address;
+//                dIn.setID(id);
+//                dIn.setName(name);
+//                dIn.setAddress(address);
+//                dIn.addRecord();
+//                break;
+//            case 1:
+//                cin >> id;
+//                dIn.deleteRecord(id);
+//                break;
+//
+//            default:
+//                cout << "Unknown Command";
+//                break;
+//        }
+//        cout << "enter your command: ";
+//        cin >> cmd;
+//    }
+//////////////////////////////////////////////
 
-    Doctor d4("D005", "Dr. Jane ", "456 Elm Street");
-    d4.addRecord();
-    d4.updatedoc("Dr. Jane Smith", "D005");
+    d.deleteRecord("Bassem", "D005");
+//
+//    Doctor d4("D004", "Dr. Jane", "456 Elm Street");
+//    d4.addRecord();
+//    d4.updatedoc("tone poe", "D004");
+
+//    IndexManager ind;
+//    ind.insertDocRecordSec("osama", "D002");
+//    ind.insertDocRecordSec("osama", "D004");
+//    ind.insertDocRecordSec("osma", "D001");
+//    ind.insertDocRecordSec("osma", "D005");
+//    ind.insertDocRecordSec("osama", "D010");
     return 0;
 }
