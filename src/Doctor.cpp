@@ -42,7 +42,7 @@ void Doctor::setAddress(const char *address) {
 
 void Doctor::addRecord() {
     int actualLength;
-    fstream file(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doctors.txt)",
+    fstream file(R"(C:\Users\Dell\Downloads\Healthcare-Management-System\Healthcare-Management-System\data\doctors.txt)",
                  ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file.\n";

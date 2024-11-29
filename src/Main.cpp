@@ -77,8 +77,8 @@ int main() {
 //        cin >> cmd;
 //    }
 //////////////////////////////////////////////
-
-    d.deleteRecord("Bassem", "D005");
+//
+//    d.deleteRecord("Bassem", "D005");
 //
 //    Doctor d4("D004", "Dr. Jane", "456 Elm Street");
 //    d4.addRecord();

@@ -12,7 +12,7 @@ map<string, IndexManager::Node *> IndexManager::appointmentSecIndex;
 
 ////////////////////Doctor Primary Indexes////////////////////////////////////////
 void IndexManager::insertDocRecord(string const &docId, int recPosition) {
-    fstream docIndFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_index.txt)",
+    fstream docIndFile(R"(C:\Users\Dell\Downloads\Healthcare-Management-System\Healthcare-Management-System\data\doc_index.txt)",
                        ios::in | ios::out | ios::binary);
     if (!docIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -29,22 +29,22 @@ void IndexManager::insertDocRecord(string const &docId, int recPosition) {
 
     docIndFile.close();
 }
-
-void IndexManager::deleteDocRecord(const string &docId) {
-    fstream docIndFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_index.txt)",
-                       ios::in | ios::out | ios::trunc);
-    if (!docIndFile.is_open()) {
-        cerr << "Failed to open index file.\n";
-        return;
-    }
-
-    if (doctorPrimIndex.empty() && !isFileEmpty(docIndFile)) {
-        initialize_map(docIndFile, doctorPrimIndex);//initializing the map if its empty and the data file isn't empty
-    }
-    doctorPrimIndex.erase(docId);//erasing the record from the index map
-    write_to_file(docIndFile, doctorPrimIndex);//rewriting the index file
-    docIndFile.close();
-}
+//
+//void IndexManager::deleteDocRecord(const string &docId) {
+//    fstream docIndFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_index.txt)",
+//                       ios::in | ios::out | ios::trunc);
+//    if (!docIndFile.is_open()) {
+//        cerr << "Failed to open index file.\n";
+//        return;
+//    }
+//
+//    if (doctorPrimIndex.empty() && !isFileEmpty(docIndFile)) {
+//        initialize_map(docIndFile, doctorPrimIndex);//initializing the map if its empty and the data file isn't empty
+//    }
+//    doctorPrimIndex.erase(docId);//erasing the record from the index map
+//    write_to_file(docIndFile, doctorPrimIndex);//rewriting the index file
+//    docIndFile.close();
+//}
 
 /////////////////////Appointment Primary Indexes//////////////////////////////
 
@@ -193,75 +193,75 @@ bool IndexManager::isFileEmpty(fstream &file) {
 }
 
 ////////////////////Doctor Secondary Indexes////////////////////////////////////////
-void IndexManager::insertDocRecordSec(const string &docName, const string &docId) {
-    fstream docSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_sec_index.txt)",
-                       ios::in | ios::out);
-    if (!docSecFile.is_open()) {
-        cerr << "Failed to open index file.\n";
-        return;
-    }
-    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
-        initialize_sec_map(docSecFile, doctorSecIndex);
-    }
-    if (doctorSecIndex.find(docName) == doctorSecIndex.end()) {
-        doctorSecIndex[docName] = new Node(docId);
-    } else {
-        Node *current = doctorSecIndex[docName];
-        while (current->next != nullptr) {
-            current = current->next;
-        }
-        current->next = new Node(docId);
-    }
-    write_to_sec_file(docSecFile, doctorSecIndex);
-
-}
-
-void IndexManager::deleteDocRecordSec(const string &docName, const string &docId) {
-    fstream docSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_sec_index.txt)",
-                       ios::in | ios::out | ios::trunc);
-    if (!docSecFile.is_open()) {
-        cerr << "Failed to open index file.\n";
-        return;
-    }
-
-    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
-        initialize_sec_map(docSecFile, doctorSecIndex);//initializing the map if its empty and the data file isn't empty
-    }
-    if (doctorSecIndex.find(docName) == doctorSecIndex.end())return;
-
-
-
-//0 1 2 3 4
-    Node *head = doctorSecIndex[docName];
-    Node *current = head;
-    Node *tail = nullptr;
-
-    while (current != nullptr) {
-        if (current->primaryKey == docId) {
-            if (tail == nullptr) {
-                doctorSecIndex[docName] = current->next;
-
-                if (doctorSecIndex[docName] == nullptr)
-                    doctorSecIndex.erase(docName);
-
-
-            } else {
-                tail->next = current->next;
-            }
-
-            delete current;
-            write_to_sec_file(docSecFile, doctorSecIndex);
-            docSecFile.close();
-            return;
-        }
-        tail = current;
-        current = current->next;
-    }
-    cerr << "Id is not found";
-    write_to_sec_file(docSecFile, doctorSecIndex);
-    docSecFile.close();
-
-}
+//void IndexManager::insertDocRecordSec(const string &docName, const string &docId) {
+//    fstream docSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_sec_index.txt)",
+//                       ios::in | ios::out);
+//    if (!docSecFile.is_open()) {
+//        cerr << "Failed to open index file.\n";
+//        return;
+//    }
+//    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
+//        initialize_sec_map(docSecFile, doctorSecIndex);
+//    }
+//    if (doctorSecIndex.find(docName) == doctorSecIndex.end()) {
+//        doctorSecIndex[docName] = new Node(docId);
+//    } else {
+//        Node *current = doctorSecIndex[docName];
+//        while (current->next != nullptr) {
+//            current = current->next;
+//        }
+//        current->next = new Node(docId);
+//    }
+//    write_to_sec_file(docSecFile, doctorSecIndex);
+//
+//}
+//
+//void IndexManager::deleteDocRecordSec(const string &docName, const string &docId) {
+//    fstream docSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_sec_index.txt)",
+//                       ios::in | ios::out | ios::trunc);
+//    if (!docSecFile.is_open()) {
+//        cerr << "Failed to open index file.\n";
+//        return;
+//    }
+//
+//    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
+//        initialize_sec_map(docSecFile, doctorSecIndex);//initializing the map if its empty and the data file isn't empty
+//    }
+//    if (doctorSecIndex.find(docName) == doctorSecIndex.end())return;
+//
+//
+//
+////0 1 2 3 4
+//    Node *head = doctorSecIndex[docName];
+//    Node *current = head;
+//    Node *tail = nullptr;
+//
+//    while (current != nullptr) {
+//        if (current->primaryKey == docId) {
+//            if (tail == nullptr) {
+//                doctorSecIndex[docName] = current->next;
+//
+//                if (doctorSecIndex[docName] == nullptr)
+//                    doctorSecIndex.erase(docName);
+//
+//
+//            } else {
+//                tail->next = current->next;
+//            }
+//
+//            delete current;
+//            write_to_sec_file(docSecFile, doctorSecIndex);
+//            docSecFile.close();
+//            return;
+//        }
+//        tail = current;
+//        current = current->next;
+//    }
+//    cerr << "Id is not found";
+//    write_to_sec_file(docSecFile, doctorSecIndex);
+//    docSecFile.close();
+//
+//}
 //////////////////Appointment Secondary Indexes/////////////////////////////////////
 void IndexManager::insertAppRecordSec(const string &docId, const string &appId) {
     fstream appSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\app_sec_index.txt)",
