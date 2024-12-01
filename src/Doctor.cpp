@@ -42,7 +42,7 @@ void Doctor::setAddress(const char *address) {
 
 void Doctor::addRecord() {
     int actualLength;
-    fstream file(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doctors.txt)",
+    fstream file(R"(../data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file.\n";
@@ -80,7 +80,7 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
         cerr << "Record with ID " << id << " not found.\n";
         return;
     }
-    fstream file(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doctors.txt)",
+    fstream file(R"(../data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
     if (file.is_open()) {
         int pos = mp[id];
@@ -97,8 +97,8 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
     file.close();
 }
 
-void Doctor::updatedoc(const char *name, string id) {
-    fstream file(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doctors.txt)",
+void Doctor::updateDoc(const char *name, string id) {
+    fstream file(R"(../data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
     if (file.is_open()) {
         int pos = mp[id];
@@ -130,7 +130,7 @@ void Doctor::updatedoc(const char *name, string id) {
 }
 
 void Doctor::printMap() {
-    for (auto i: mp) {
+    for (auto const &i: mp) {
         cout << i.first << " " << i.second << endl;
     }
 }

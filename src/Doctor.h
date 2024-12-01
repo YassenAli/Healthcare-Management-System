@@ -34,7 +34,7 @@ public:
 
     void deleteRecord(const string &docName, const string &id);
 
-    static void updatedoc(const char *name, string id);
+    static void updateDoc(const char *name, string id);
 
     void initialize_map(fstream &file);
 

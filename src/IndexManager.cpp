@@ -11,8 +11,9 @@ map<string, IndexManager::Node *> IndexManager::doctorSecIndex;
 map<string, IndexManager::Node *> IndexManager::appointmentSecIndex;
 
 ////////////////////Doctor Primary Indexes////////////////////////////////////////
+
 void IndexManager::insertDocRecord(string const &docId, int recPosition) {
-    fstream docIndFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_index.txt)",
+    fstream docIndFile(R"(../data/doc_index.txt)",
                        ios::in | ios::out | ios::binary);
     if (!docIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -31,7 +32,7 @@ void IndexManager::insertDocRecord(string const &docId, int recPosition) {
 }
 
 void IndexManager::deleteDocRecord(const string &docId) {
-    fstream docIndFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_index.txt)",
+    fstream docIndFile(R"(../data/doc_index.txt)",
                        ios::in | ios::out | ios::trunc);
     if (!docIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -46,10 +47,82 @@ void IndexManager::deleteDocRecord(const string &docId) {
     docIndFile.close();
 }
 
+//////////////////Doctor Secondary Indexes////////////////////////////////////////
+
+void IndexManager::insertDocRecordSec(const string &docName, const string &docId) {
+    fstream docSecFile(R"(../data/doc_sec_index.txt)",
+                       ios::in | ios::out);
+    if (!docSecFile.is_open()) {
+        cerr << "Failed to open index file.\n";
+        return;
+    }
+    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
+        initialize_sec_map(docSecFile, doctorSecIndex);
+    }
+    if (doctorSecIndex.find(docName) == doctorSecIndex.end()) {
+        doctorSecIndex[docName] = new Node(docId);
+    } else {
+        Node *current = doctorSecIndex[docName];
+        while (current->next != nullptr) {
+            current = current->next;
+        }
+        current->next = new Node(docId);
+    }
+    write_to_sec_file(docSecFile, doctorSecIndex);
+
+}
+
+void IndexManager::deleteDocRecordSec(const string &docName, const string &docId) {
+    fstream docSecFile(R"(../data/doc_sec_index.txt)",
+                       ios::in | ios::out | ios::trunc);
+    if (!docSecFile.is_open()) {
+        cerr << "Failed to open index file.\n";
+        return;
+    }
+
+    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
+        initialize_sec_map(docSecFile, doctorSecIndex);//initializing the map if its empty and the data file isn't empty
+    }
+    if (doctorSecIndex.find(docName) == doctorSecIndex.end())return;
+
+
+
+//0 1 2 3 4
+    Node *head = doctorSecIndex[docName];
+    Node *current = head;
+    Node *tail = nullptr;
+
+    while (current != nullptr) {
+        if (current->primaryKey == docId) {
+            if (tail == nullptr) {
+                doctorSecIndex[docName] = current->next;
+
+                if (doctorSecIndex[docName] == nullptr)
+                    doctorSecIndex.erase(docName);
+
+
+            } else {
+                tail->next = current->next;
+            }
+
+            delete current;
+            write_to_sec_file(docSecFile, doctorSecIndex);
+            docSecFile.close();
+            return;
+        }
+        tail = current;
+        current = current->next;
+    }
+    cerr << "Id is not found";
+    write_to_sec_file(docSecFile, doctorSecIndex);
+    docSecFile.close();
+
+}
+
 /////////////////////Appointment Primary Indexes//////////////////////////////
 
 void IndexManager::insertAppRecord(string const &appId, int recPosition) {
-    fstream appIndFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\appointment_index.txt)",
+    fstream appIndFile(R"(../data/appointment_index.txt)",
                        ios::in | ios::out | ios::binary);
     if (!appIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -69,7 +142,7 @@ void IndexManager::insertAppRecord(string const &appId, int recPosition) {
 }
 
 void IndexManager::deleteAppRecord(const string &appId) {
-    fstream appIndFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\appointment_index.txt)",
+    fstream appIndFile(R"(../data/appointment_index.txt)",
                        ios::in | ios::out | ios::trunc);
     if (!appIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -83,6 +156,77 @@ void IndexManager::deleteAppRecord(const string &appId) {
     appointmentPrimIndex.erase(appId);//erasing the record from the index map
     write_to_file(appIndFile, appointmentPrimIndex);//rewriting the index file
     appIndFile.close();
+}
+
+////////////////Appointment Secondary Indexes/////////////////////////////////////
+void IndexManager::insertAppRecordSec(const string &docId, const string &appId) {
+    fstream appSecFile(R"(../data/app_sec_index.txt)",
+                       ios::in | ios::out);
+    if (!appSecFile.is_open()) {
+        cerr << "Failed to open index file.\n";
+        return;
+    }
+    if (appointmentSecIndex.empty() && !isFileEmpty(appSecFile)) {
+        initialize_sec_map(appSecFile, appointmentSecIndex);
+    }
+    if (appointmentSecIndex.find(docId) == appointmentSecIndex.end()) {
+        doctorSecIndex[docId] = new Node(docId);
+    } else {
+        Node *current = doctorSecIndex[appId];
+        while (current->next != nullptr) {
+            current = current->next;
+        }
+        current->next = new Node(docId);
+    }
+    write_to_sec_file(appSecFile, appointmentSecIndex);
+
+}
+
+void IndexManager::deleteAppRecordSec(const string &docId, const string &appId) {
+    fstream appSecFile(R"(../data/app_sec_index.txt)",
+                       ios::in | ios::out | ios::trunc);
+    if (!appSecFile.is_open()) {
+        cerr << "Failed to open index file.\n";
+        return;
+    }
+
+    if (appointmentSecIndex.empty() && !isFileEmpty(appSecFile)) {
+        initialize_sec_map(appSecFile, appointmentSecIndex);//initializing the map if its empty and the data file isn't empty
+    }
+    if (appointmentSecIndex.find(appId) == appointmentSecIndex.end())return;
+
+
+
+//0 1 2 3 4
+    Node *head = appointmentSecIndex[appId];
+    Node *current = head;
+    Node *tail = nullptr;
+
+    while (current != nullptr) {
+        if (current->primaryKey == appId) {
+            if (tail == nullptr) {
+                doctorSecIndex[appId] = current->next;
+
+                if (doctorSecIndex[appId] == nullptr)
+                    appointmentSecIndex.erase(appId);
+
+
+            } else {
+                tail->next = current->next;
+            }
+
+            delete current;
+            write_to_sec_file(appSecFile, appointmentSecIndex);
+            appSecFile.close();
+            return;
+        }
+        tail = current;
+        current = current->next;
+    }
+    cerr << "Id is not found";
+    write_to_sec_file(appSecFile, appointmentSecIndex);
+    appSecFile.close();
+
 }
 
 ///////////////////////////////////Shared Functions////////////////////////////////////////
@@ -192,146 +336,8 @@ bool IndexManager::isFileEmpty(fstream &file) {
     return file.tellg() == 0;
 }
 
-////////////////////Doctor Secondary Indexes////////////////////////////////////////
-void IndexManager::insertDocRecordSec(const string &docName, const string &docId) {
-    fstream docSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_sec_index.txt)",
-                       ios::in | ios::out);
-    if (!docSecFile.is_open()) {
-        cerr << "Failed to open index file.\n";
-        return;
-    }
-    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
-        initialize_sec_map(docSecFile, doctorSecIndex);
-    }
-    if (doctorSecIndex.find(docName) == doctorSecIndex.end()) {
-        doctorSecIndex[docName] = new Node(docId);
-    } else {
-        Node *current = doctorSecIndex[docName];
-        while (current->next != nullptr) {
-            current = current->next;
-        }
-        current->next = new Node(docId);
-    }
-    write_to_sec_file(docSecFile, doctorSecIndex);
-
-}
-
-void IndexManager::deleteDocRecordSec(const string &docName, const string &docId) {
-    fstream docSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\doc_sec_index.txt)",
-                       ios::in | ios::out | ios::trunc);
-    if (!docSecFile.is_open()) {
-        cerr << "Failed to open index file.\n";
-        return;
-    }
-
-    if (doctorSecIndex.empty() && !isFileEmpty(docSecFile)) {
-        initialize_sec_map(docSecFile, doctorSecIndex);//initializing the map if its empty and the data file isn't empty
-    }
-    if (doctorSecIndex.find(docName) == doctorSecIndex.end())return;
 
 
-
-//0 1 2 3 4
-    Node *head = doctorSecIndex[docName];
-    Node *current = head;
-    Node *tail = nullptr;
-
-    while (current != nullptr) {
-        if (current->primaryKey == docId) {
-            if (tail == nullptr) {
-                doctorSecIndex[docName] = current->next;
-
-                if (doctorSecIndex[docName] == nullptr)
-                    doctorSecIndex.erase(docName);
-
-
-            } else {
-                tail->next = current->next;
-            }
-
-            delete current;
-            write_to_sec_file(docSecFile, doctorSecIndex);
-            docSecFile.close();
-            return;
-        }
-        tail = current;
-        current = current->next;
-    }
-    cerr << "Id is not found";
-    write_to_sec_file(docSecFile, doctorSecIndex);
-    docSecFile.close();
-
-}
-//////////////////Appointment Secondary Indexes/////////////////////////////////////
-void IndexManager::insertAppRecordSec(const string &docId, const string &appId) {
-    fstream appSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\app_sec_index.txt)",
-                       ios::in | ios::out);
-    if (!appSecFile.is_open()) {
-        cerr << "Failed to open index file.\n";
-        return;
-    }
-    if (appointmentSecIndex.empty() && !isFileEmpty(appSecFile)) {
-        initialize_sec_map(appSecFile, appointmentSecIndex);
-    }
-    if (appointmentSecIndex.find(docId) == appointmentSecIndex.end()) {
-        doctorSecIndex[docId] = new Node(docId);
-    } else {
-        Node *current = doctorSecIndex[appId];
-        while (current->next != nullptr) {
-            current = current->next;
-        }
-        current->next = new Node(docId);
-    }
-    write_to_sec_file(appSecFile, appointmentSecIndex);
-
-}
-
-void IndexManager::deleteAppRecordSec(const string &docId, const string &appId) {
-    fstream appSecFile(R"(C:\Users\Osama\Desktop\Healthcare-Management-System\data\app_sec_index.txt)",
-                       ios::in | ios::out | ios::trunc);
-    if (!appSecFile.is_open()) {
-        cerr << "Failed to open index file.\n";
-        return;
-    }
-
-    if (appointmentSecIndex.empty() && !isFileEmpty(appSecFile)) {
-        initialize_sec_map(appSecFile, appointmentSecIndex);//initializing the map if its empty and the data file isn't empty
-    }
-    if (appointmentSecIndex.find(appId) == appointmentSecIndex.end())return;
-
-
-
-//0 1 2 3 4
-    Node *head = appointmentSecIndex[appId];
-    Node *current = head;
-    Node *tail = nullptr;
-
-    while (current != nullptr) {
-        if (current->primaryKey == appId) {
-            if (tail == nullptr) {
-                doctorSecIndex[appId] = current->next;
-
-                if (doctorSecIndex[appId] == nullptr)
-                    appointmentSecIndex.erase(appId);
-
-
-            } else {
-                tail->next = current->next;
-            }
-
-            delete current;
-            write_to_sec_file(appSecFile, appointmentSecIndex);
-            appSecFile.close();
-            return;
-        }
-        tail = current;
-        current = current->next;
-    }
-    cerr << "Id is not found";
-    write_to_sec_file(appSecFile, appointmentSecIndex);
-    appSecFile.close();
-
-}
 
 
 //#include <iostream>
