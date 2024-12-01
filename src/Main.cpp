@@ -78,7 +78,7 @@ int main() {
 //    }
 //////////////////////////////////////////////
 //
-    d.deleteRecord("Bassem", "D008");
+//    d.deleteRecord("Bassem", "D005");
 //
 //    Doctor d4("D004", "Dr. Jane", "456 Elm Street");
 //    d4.addRecord();
