@@ -17,7 +17,7 @@ public:
             : appointmentID(id), date(date), doctorID(doctorID) {}
 
     void saveRecord() {
-        ofstream file("data/appointments.txt", ios::app);
+        ofstream file("../data/appointments.txt", ios::app);
         if (file.is_open()) {
             file << appointmentID << '|' << date << '|' << doctorID << '\n';
             file.close();

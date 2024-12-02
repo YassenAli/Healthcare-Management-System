@@ -2,7 +2,7 @@
 #include "Doctor.h"
 #include "Appointment.cpp"
 #include "FileManager.cpp"
-#include "IndexManager.h"
+#include "BinarySearch.cpp"
 
 using namespace std;
 
@@ -49,8 +49,12 @@ int main() {
     d1.addRecord();
     d3.addRecord();
     d2.addRecord();
+//    d.deleteRecord("Bassem", "D003");
+    BinarySearch s;
+    cout << s.searchByDocId("D003");
+    cout << s.searchByDocName("Hamed");
 //    d.printMap();
-//////////////////////////////////////////////
+///////////////////////////////////////////////
 //    int cmd;
 //    cin >> cmd;
 //    Doctor dIn;
@@ -78,7 +82,7 @@ int main() {
 //    }
 //////////////////////////////////////////////
 //
-//    d.deleteRecord("Bassem", "D005");
+
 //
 //    Doctor d4("D004", "Dr. Jane", "456 Elm Street");
 //    d4.addRecord();
