@@ -15,7 +15,7 @@ map<string, int> Doctor::mp;
 using namespace std;
 
 int readLastLine(){
-    string filename = "../src/Doctor_Avail_list.txt";
+    string filename = "../data/Doctor_Avail_list.txt";
     fstream file(filename, std::ios::in | std::ios::ate | ios :: out);
     if (!file.is_open()) {
         throw ios_base::failure("Failed to open file");
@@ -115,7 +115,7 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
     }
     fstream file(R"(../data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
-    string filename = "../src/Doctor_Avail_list.txt";
+    string filename = "../data/Doctor_Avail_list.txt";
     std::fstream file1(filename, std::ios::in | std::ios::ate | ios :: out | ios :: app);
     if (file.is_open()) {
         int pos = mp[id];
