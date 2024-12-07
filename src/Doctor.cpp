@@ -116,7 +116,7 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
     fstream file(R"(../data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
     string filename = "../data/Doctor_Avail_list.txt";
-    std::fstream file1(filename, std::ios::in | std::ios::ate | ios :: out | ios :: app);
+    fstream file1(filename, std::ios::in | std::ios::ate | ios :: out | ios :: app);
     if (file.is_open()) {
         int pos = mp[id];
         file1  << "|" << pos;
