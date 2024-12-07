@@ -12,8 +12,43 @@
 #include "IndexManager.h"
 
 map<string, int> Doctor::mp;
-vector<int> Doctor::availist;
 using namespace std;
+
+int readLastLine(){
+    string filename = "../data/Doctor_Avail_list.txt";
+    fstream file(filename, std::ios::in | std::ios::ate | ios :: out);
+    if (!file.is_open()) {
+        throw ios_base::failure("Failed to open file");
+    }
+    streamoff fileSize = file.tellg();
+    if (fileSize == 0) {
+        return -1;
+    }
+    file.seekg(0, ios::beg);
+    ostringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+    string content = buffer.str();
+    size_t lastNewline = content.find_last_of('|');
+
+    string lastLine;
+    string updatedContent;
+    if (lastNewline == string::npos) {
+        lastLine = content;
+        updatedContent = "";
+    } else {
+        lastLine = content.substr(lastNewline + 1);
+        updatedContent = content.substr(0, lastNewline);
+    }
+    ofstream outFile(filename, ios::trunc);
+    if (!outFile.is_open()) {
+        throw ios_base::failure("Failed to open file for writing");
+    }
+    outFile << updatedContent;
+    outFile.close();
+
+    return stoi(lastLine);
+}
 
 Doctor::Doctor() {
     strncpy(doctorID, "0", sizeof(doctorID) - 1);
@@ -55,16 +90,14 @@ void Doctor::addRecord() {
         cerr << "cannot duplicate doctor id\n";
         return;
     }
-    int startPos;
-    if (availist.empty()) {
+    int startPos = readLastLine();
+    if (startPos == -1) {
         file.seekp(0, ios::end);
         startPos = file.tellp();
         actualLength = strlen(doctorID) + strlen(name) + strlen(address) + 2;
         file << " " << actualLength << ' ' << doctorID << '|' << name << '|' << address << '\n';
 
     } else {
-        startPos = availist.back();
-        availist.pop_back();
         file.seekp(startPos, ios::beg);
         actualLength = strlen(doctorID) + strlen(name) + strlen(address) + 2;
         file << " " << actualLength << ' ' << doctorID << '|' << name << '|' << address << '\n';
@@ -82,9 +115,11 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
     }
     fstream file(R"(../data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
+    string filename = "../data/Doctor_Avail_list.txt";
+    std::fstream file1(filename, std::ios::in | std::ios::ate | ios :: out | ios :: app);
     if (file.is_open()) {
         int pos = mp[id];
-        availist.push_back(pos);
+        file1  << "|" << pos;
         file.seekp(pos, ios::beg);
         file.put('*');
         mp.erase(id);
