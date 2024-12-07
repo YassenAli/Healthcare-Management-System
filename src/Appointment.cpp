@@ -89,11 +89,18 @@ public:
             return;
         }
 
-        int actualLength = strlen(appointmentID) + strlen(appointmentDate) + strlen(doctorID) + 2;
-        
-        int startPos = file.tellp();
+         int startPos = readLastLine();
+    if (startPos == -1) {
+        file.seekp(0, ios::end);
+        startPos = file.tellp();
+        actualLength = strlen(appointmentID) + strlen(appointmentDate) + strlen(doctorId) + 2;
+        file << " " << actualLength << ' ' << appointmentID << '|' << appointmentDate << '|' << doctorId<< '\n';
 
-        file << " " << actualLength << ' ' << appointmentID << '|' << appointmentDate << '|' << doctorID << '\n';
+    } else {
+        file.seekp(startPos, ios::beg);
+        actualLength = strlen(appointmentID) + strlen(appointmentDate)+ strlen(doctorId) + 2;
+        file << " " << actualLength << ' ' << appointmentID << '|' << appointmentDate << '|' << doctorId<< '\n';
+    }
 
         appointmentMap[appointmentID] = startPos;
         file.close();
