@@ -7,12 +7,47 @@
 
 using namespace std;
 map<string, int> Appointment::appointmentMap;
+int readLastLine(){
+    string filename = "../data/Appointment_Avail_list.txt";
+    fstream file(filename, std::ios::in | std::ios::ate | ios :: out);
+    if (!file.is_open()) {
+        throw ios_base::failure("Failed to open file");
+    }
+    streamoff fileSize = file.tellg();
+    if (fileSize == 0) {
+        return -1;
+    }
+    file.seekg(0, ios::beg);
+    ostringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+    string content = buffer.str();
+    size_t lastNewline = content.find_last_of('|');
+
+    string lastLine;
+    string updatedContent;
+    if (lastNewline == string::npos) {
+        lastLine = content;
+        updatedContent = "";
+    } else {
+        lastLine = content.substr(lastNewline + 1);
+        updatedContent = content.substr(0, lastNewline);
+    }
+    ofstream outFile(filename, ios::trunc);
+    if (!outFile.is_open()) {
+        throw ios_base::failure("Failed to open file for writing");
+    }
+    outFile << updatedContent;
+    outFile.close();
+
+    return stoi(lastLine);
+}
 class Appointment {
 private:
-    char appointmentID[15]; // Primary Key
+    char appointmentID[15]; 
     char appointmentDate[30];
-    char doctorID[15];      // Secondary Key (linked to Doctor)
-    static map<string, int> appointmentMap; // Maps appointmentID to file positions
+    char doctorID[15];      
+    static map<string, int> appointmentMap; 
 
 public:
     // Constructors
@@ -55,6 +90,7 @@ public:
         }
 
         int actualLength = strlen(appointmentID) + strlen(appointmentDate) + strlen(doctorID) + 2;
+        
         int startPos = file.tellp();
 
         file << " " << actualLength << ' ' << appointmentID << '|' << appointmentDate << '|' << doctorID << '\n';
@@ -63,7 +99,7 @@ public:
         file.close();
     }
 
-    // Delete Record
+    
     void deleteRecord(const string &id) {
         if (appointmentMap.find(id) == appointmentMap.end()) {
             cerr << "Record with ID " << id << " not found.\n";
