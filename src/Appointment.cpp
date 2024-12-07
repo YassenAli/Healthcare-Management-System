@@ -35,12 +35,12 @@ int Appointment::readLastLine() {
         lastLine = content.substr(lastNewline + 1);
         updatedContent = content.substr(0, lastNewline);
     }
-    ofstream outFile(filename, ios::trunc);
-    if (!outFile.is_open()) {
+    file.open(filePath,ios::in | ios::out | ios::binary | ios :: trunc);
+    if (!file.is_open()) {
         throw ios_base::failure("Failed to open file for writing");
     }
-    outFile << updatedContent;
-    outFile.close();
+    file << updatedContent;
+    file.close();
 
     return stoi(lastLine);
 }
@@ -120,8 +120,8 @@ void Appointment::deleteAppRecord(const string &docId, const string &appId) {
         cerr << "Failed to open the file for deletion.\n";
         return;
     }
-    filesystem::path filePath = std::filesystem::current_path() / "data" / "Appointment_Avail_list.txt";
-    fstream file1;file1.open(filePath,ios::in | ios::out | ios::binary | ios :: app);
+    filesystem::path filePath1 = filesystem::current_path() / "data" / "Appointment_Avail_list.txt";
+    fstream file1;file1.open(filePath1,ios::in | ios::out | ios::binary | ios :: app);
     int pos = appointmentMap[appId];
     file1 << "|" << pos;
     file.seekp(pos, ios::beg);
@@ -171,5 +171,4 @@ void Appointment::updateAppointmentDate(const char *date, const string &id) {
     file.write(m, sizeof(m));
     file.close();
 }
-
 
