@@ -10,7 +10,7 @@ using namespace std;
 class Doctor {
 private:
     char appointmentID[15]{};  // Primary Key
-    char date[30]{};
+    char appointmentDate[30]{};
     char doctorID[30]{};
     static map<string, int> mp;
     static vector<int> availist;
