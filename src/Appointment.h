@@ -3,36 +3,38 @@
 #include <vector>
 #include <map>
 
-#ifndef HEALTHCARE_MANAGEMENT_SYSTEM_DOCTOR_H
-#define HEALTHCARE_MANAGEMENT_SYSTEM_DOCTOR_H
+#ifndef HEALTHCARE_MANAGEMENT_SYSTEM_APPOINTMENT_H
+#define HEALTHCARE_MANAGEMENT_SYSTEM_APPOINTMENT_H
 using namespace std;
 
-class Doctor {
+class Appointment {
 private:
     char appointmentID[15]{};  // Primary Key
     char appointmentDate[30]{};
     char doctorID[30]{};
-    static map<string, int> mp;
+    static map<string, int> appointmentMap;
     static vector<int> availist;
+    static IndexManager AppPrimIndex;
+    static IndexManager AppSecIndex;
 public:
-    Doctor();
+    Appointment();
 
-    Doctor(const char *appointmentId, const char *date, const char *doctorID);
+    Appointment(const char *appointmentId, const char *date, const char *doctorID);
 
-    void setID(const char *appointmentid);
+    int readLastLine();
 
-    void setName(const char *date);
+    void setAppointmentID(const char *appointmentid);
 
-    void setAddress(const char *doctorID);
+    void setAppointmentDate(const char *date);
 
-    void addRecord();
+    void setDocID(const char *docID);
 
-    void deleteRecord(const string &date, const string &id);
+    void addAppRecord();
 
-    static void updateDoc(const char *date, string id);
+    void deleteAppRecord(const string &docId, const string &id);
 
-    void initialize_map(fstream &file);
+    void updateAppointmentDate(const char *date, const string &id);
 
-    void printMap();
 };
 
+#endif

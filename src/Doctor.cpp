@@ -9,14 +9,15 @@
 #include <cstring>
 #include <map>
 #include <vector>
+#include <sstream>
 #include "IndexManager.h"
 
 map<string, int> Doctor::mp;
 using namespace std;
 
-int readLastLine(){
+int Doctor::readLastLine() {
     string filename = "../data/Doctor_Avail_list.txt";
-    fstream file(filename, std::ios::in | std::ios::ate | ios :: out);
+    fstream file(filename, std::ios::in | std::ios::ate | ios::out);
     if (!file.is_open()) {
         throw ios_base::failure("Failed to open file");
     }
@@ -116,10 +117,10 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
     fstream file(R"(../data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
     string filename = "../data/Doctor_Avail_list.txt";
-    fstream file1(filename, std::ios::in | std::ios::ate | ios :: out | ios :: app);
+    fstream file1(filename, std::ios::in | std::ios::ate | ios::out | ios::app);
     if (file.is_open()) {
         int pos = mp[id];
-        file1  << "|" << pos;
+        file1 << "|" << pos;
         file.seekp(pos, ios::beg);
         file.put('*');
         mp.erase(id);

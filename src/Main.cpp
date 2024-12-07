@@ -8,8 +8,7 @@
 
 using namespace std;
 
-void displayMenu()
-{
+void displayMenu() {
     std::cout << "1. Add New Doctor\n";
     std::cout << "2. Add New Appointment\n";
     std::cout << "3. Update Doctor\n";
@@ -44,28 +43,28 @@ void displayMenu()
 
     return 0;
 }*/
-int main()
-{
-    // Doctor d("D008", "Bassem", "123 Main Street");
-    // Doctor d1("D002", "Hamed", "123 Main Street");
-    // Doctor d2("D003", "Bassem", "123 Main Street");
-    // Doctor d3("D004", "Ahmed", "123 Main Street");
-    // d.addRecord();
-    // d1.addRecord();
-    // d3.addRecord();
-    // d2.addRecord();
-    // Appointment a("A001", "2021-12-01", "D002");
-    // a.saveRecord();
-    IndexManager ind;
-    // ind.insertAppRecord("A001", 0);
-    // ind.insertAppRecord("A002", 1);
-    ind.insertAppRecordSec("D002", "A001");
-    QueryHandler queryHandler;
-    cout << "Enter your query: ";
-    cin.sync();
-    string query;
-    getline(cin, query);
-    queryHandler.executeQuery(query);
+int main() {
+    Doctor d("D008", "Bassem", "123 Main Street");
+    Doctor d1("D002", "Hamed", "123 Main Street");
+    Doctor d2("D003", "Bassem", "123 Main Street");
+    Doctor d3("D004", "Ahmed", "123 Main Street");
+    d.addRecord();
+    d1.addRecord();
+    d3.addRecord();
+    d2.addRecord();
+    Appointment a("A001", "2021-12-01", "D002");
+    Appointment a2("A002", "2021-12-01", "D002");
+    Appointment a3("A003", "2021-12-01", "D002");
+    a.addAppRecord();
+    a2.addAppRecord();
+    a3.addAppRecord();
+//    ind.insertAppRecordSec("D002", "A001");
+//    QueryHandler queryHandler;
+//    cout << "Enter your query: ";
+//    cin.sync();
+//    string query;
+//    getline(cin, query);
+//    queryHandler.executeQuery(query);
 
     // //    d.deleteRecord("Bassem", "D003");
     //     BinarySearch s;
@@ -106,10 +105,5 @@ int main()
     //    d4.addRecord();
     //    d4.updatedoc("tone poe", "D004");
 
-    //    ind.insertDocRecordSec("osama", "D002");
-    //    ind.insertDocRecordSec("osama", "D004");
-    //    ind.insertDocRecordSec("osma", "D001");
-    //    ind.insertDocRecordSec("osma", "D005");
-    //    ind.insertDocRecordSec("osama", "D010");
     return 0;
 }

@@ -24,6 +24,8 @@ public:
 
     Doctor(const char *id, const char *name, const char *address);
 
+    int readLastLine();
+
     void setID(const char *id);
 
     void setName(const char *name);
