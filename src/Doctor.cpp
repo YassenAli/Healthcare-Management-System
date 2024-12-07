@@ -10,14 +10,15 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <filesystem>
 #include "IndexManager.h"
 
 map<string, int> Doctor::mp;
 using namespace std;
 
 int Doctor::readLastLine() {
-    string filename = "../data/Doctor_Avail_list.txt";
-    fstream file(filename, std::ios::in | std::ios::ate | ios::out);
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "Doctor_Avail_list.txt";
+    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         throw ios_base::failure("Failed to open file");
     }
@@ -41,7 +42,8 @@ int Doctor::readLastLine() {
         lastLine = content.substr(lastNewline + 1);
         updatedContent = content.substr(0, lastNewline);
     }
-    ofstream outFile(filename, ios::trunc);
+    fstream outFile(filePath,
+                  ios :: trunc);
     if (!outFile.is_open()) {
         throw ios_base::failure("Failed to open file for writing");
     }
@@ -78,8 +80,8 @@ void Doctor::setAddress(const char *address) {
 
 void Doctor::addRecord() {
     int actualLength;
-    fstream file(R"(../data/doctors.txt)",
-                 ios::in | ios::out | ios::binary);
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file.\n";
         return;
@@ -110,14 +112,16 @@ void Doctor::addRecord() {
 }
 
 void Doctor::deleteRecord(const string &docName, const string &id) {
+
     if (mp.find(id) == mp.end()) {
         cerr << "Record with ID " << id << " not found.\n";
         return;
     }
-    fstream file(R"(../data/doctors.txt)",
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+    fstream file(filePath,
                  ios::in | ios::out | ios::binary);
-    string filename = "../data/Doctor_Avail_list.txt";
-    fstream file1(filename, std::ios::in | std::ios::ate | ios::out | ios::app);
+    filesystem::path filePath1 = std::filesystem::current_path() / "data" / "Doctor_Avail_list.txt";
+    fstream file1;file1.open(filePath1, std::ios::in | std::ios::ate | ios::out | ios::app);
     if (file.is_open()) {
         int pos = mp[id];
         file1 << "|" << pos;
@@ -134,8 +138,8 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
 }
 
 void Doctor::updateDoc(const char *name, string id) {
-    fstream file(R"(../data/doctors.txt)",
-                 ios::in | ios::out | ios::binary);
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
     if (file.is_open()) {
         int pos = mp[id];
         file.seekg(pos, ios::beg);
