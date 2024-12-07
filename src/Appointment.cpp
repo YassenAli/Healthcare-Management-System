@@ -120,9 +120,10 @@ void Appointment::deleteAppRecord(const string &docId, const string &appId) {
         cerr << "Failed to open the file for deletion.\n";
         return;
     }
-
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "Appointment_Avail_list.txt";
+    fstream file1;file1.open(filePath,ios::in | ios::out | ios::binary | ios :: app);
     int pos = appointmentMap[appId];
-    
+    file1 << "|" << pos;
     file.seekp(pos, ios::beg);
     file.put('*');
     appointmentMap.erase(appId);
