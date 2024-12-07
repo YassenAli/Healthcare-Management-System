@@ -1,4 +1,5 @@
 #include "Doctor.h"
+#include "Appointment.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -43,12 +44,6 @@ int readLastLine(){
     return stoi(lastLine);
 }
 class Appointment {
-private:
-    char appointmentID[15]; 
-    char appointmentDate[30];
-    char doctorID[15];      
-    static map<string, int> appointmentMap; 
-
 public:
     // Constructors
     Appointment() {
