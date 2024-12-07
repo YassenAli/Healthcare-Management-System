@@ -1,4 +1,3 @@
-#include "Doctor.h"
 #include "Appointment.h"
 #include <iostream>
 #include <fstream>
@@ -11,8 +10,8 @@ using namespace std;
 map<string, int> Appointment::appointmentMap;
 
 int Appointment::readLastLine() {
-    string filename = "../data/Appointment_Avail_list.txt";
-    fstream file(filename, std::ios::in | std::ios::ate | ios::out);
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "Appointment_Avail_list.txt";
+    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         throw ios_base::failure("Failed to open file");
     }
@@ -77,7 +76,8 @@ void Appointment::setDocID(const char *docID) {
 // Add Record
 void Appointment::addAppRecord() {
     int actualLength;
-    fstream file(R"(../data/appointments.txt)", ios::in | ios::out | ios::binary | ios::app);
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file.\n";
         return;
@@ -114,13 +114,15 @@ void Appointment::deleteAppRecord(const string &docId, const string &appId) {
         return;
     }
 
-    fstream file(R"(../data/appointments.txt)", ios::in | ios::out | ios::binary);
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file for deletion.\n";
         return;
     }
 
     int pos = appointmentMap[appId];
+    
     file.seekp(pos, ios::beg);
     file.put('*');
     appointmentMap.erase(appId);
@@ -136,7 +138,8 @@ void Appointment::updateAppointmentDate(const char *date, const string &id) {
         return;
     }
 
-    fstream file(R"(../data/appointments.txt)", ios::in | ios::out | ios::binary);
+    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file for updating.\n";
         return;
