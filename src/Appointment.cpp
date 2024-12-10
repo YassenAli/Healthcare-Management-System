@@ -1,4 +1,3 @@
-#include "Doctor.h"
 #include "Appointment.h"
 #include <iostream>
 #include <fstream>
@@ -13,6 +12,10 @@ map<string, int> Appointment::appointmentMap;
 int Appointment::readLastLine() {
     string filename = "data/Appointment_Avail_list.txt";
     fstream file(filename, std::ios::in | std::ios::ate | ios::out);
+
+//    filesystem::path filePath = std::filesystem::current_path() / "data" / "Appointment_Avail_list.txt";
+//    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
+
     if (!file.is_open()) {
         throw ios_base::failure("Failed to open file");
     }
@@ -36,12 +39,12 @@ int Appointment::readLastLine() {
         lastLine = content.substr(lastNewline + 1);
         updatedContent = content.substr(0, lastNewline);
     }
-    ofstream outFile(filename, ios::trunc);
-    if (!outFile.is_open()) {
+    file.open(filename,ios::in | ios::out | ios::binary | ios :: trunc);
+    if (!file.is_open()) {
         throw ios_base::failure("Failed to open file for writing");
     }
-    outFile << updatedContent;
-    outFile.close();
+    file << updatedContent;
+    file.close();
 
     // Extract the integer part from lastLine
     std::istringstream iss(lastLine);
@@ -84,7 +87,12 @@ void Appointment::setDocID(const char *docID) {
 // Add Record
 void Appointment::addAppRecord() {
     int actualLength;
+
     fstream file(R"(data/appointments.txt)", ios::in | ios::out | ios::binary | ios::app);
+
+//    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+//    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
+
     if (!file.is_open()) {
         cerr << "Failed to open the file.\n";
         return;
@@ -122,12 +130,18 @@ void Appointment::deleteAppRecord(const string &docId, const string &appId) {
     }
 
     fstream file(R"(data/appointments.txt)", ios::in | ios::out | ios::binary);
+
+//    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+//    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
+
     if (!file.is_open()) {
         cerr << "Failed to open the file for deletion.\n";
         return;
     }
-
+//    filesystem::path filePath1 = filesystem::current_path() / "data" / "Appointment_Avail_list.txt";
+//    fstream file1;file1.open(filePath1,ios::in | ios::out | ios::binary | ios :: app);
     int pos = appointmentMap[appId];
+    file << "|" << pos;
     file.seekp(pos, ios::beg);
     file.put('*');
     appointmentMap.erase(appId);
@@ -144,6 +158,10 @@ void Appointment::updateAppointmentDate(const char *date, const string &id) {
     }
 
     fstream file(R"(data/appointments.txt)", ios::in | ios::out | ios::binary);
+
+//    filesystem::path filePath = std::filesystem::current_path() / "data" / "doctors.txt";
+//    fstream file;file.open(filePath,ios::in | ios::out | ios::binary);
+
     if (!file.is_open()) {
         cerr << "Failed to open the file for updating.\n";
         return;

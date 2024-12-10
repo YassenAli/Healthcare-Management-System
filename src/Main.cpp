@@ -1,10 +1,10 @@
 #include <iostream>
 #include "Doctor.cpp"
-#include "Appointment.cpp"
+#include "Appointment.h"
 #include "FileManager.cpp"
 #include "BinarySearch.cpp"
-#include "QueryHandler.cpp"
-#include "IndexManager.cpp"
+#include "QueryHandler.h"
+#include "IndexManager.h"
 
 using namespace std;
 
@@ -23,6 +23,7 @@ void displayMenu() {
 }
 
 int main() {
+
     Doctor d("D008", "Bassem", "123 Main Street");
     Doctor d1("D002", "Hamed", "123 Main Street");
     Doctor d2("D003", "Bassem", "123 Main Street");
@@ -39,46 +40,119 @@ int main() {
     a3.addAppRecord();
 
 
-
-//    ind.insertAppRecordSec("D002", "A001");
+    int command;
+    Doctor doc;
+    char id[15], name[30], address[30];
+    Appointment App;
+    char appId[15], date[30], docId[30];
+    BinarySearch sDoc;
+    BinarySearch sApp;
     QueryHandler queryHandler;
-    cout << "Enter your query: ";
-    cin.sync();
     string query;
-    getline(cin, query);
-    queryHandler.executeQuery(query);
 
-     //    d.deleteRecord("Bassem", "D003");
-         BinarySearch s;
-         cout << s.searchByDocId("D003");
-         cout << s.searchByDocName("Hamed");
-        d.printMap();
-    /////////////////////////////////////////////
-        int cmd;
-        cin >> cmd;
-        Doctor dIn;
-        char id[15], name[30], address[30];
-        while (cmd != -1) {
-            switch (cmd) {
-                case 0:
-                    cin >> id >> name >> address;
-                    dIn.setID(id);
-                    dIn.setName(name);
-                    dIn.setAddress(address);
-                    dIn.addRecord();
-                    break;
-                case 1:
-                    cin >> id >> name;
-                    dIn.deleteRecord(name, id);
-                    break;
+    displayMenu();
+    cin >> command;
+    while (command != 0) {
+        switch (command) {
+            case 1:
+                cout << "Enter Doctor Id, Doctor Name, Doctor Address\n";
+                cin >> id >> name >> address;
+                doc.setID(id);
+                doc.setName(name);
+                doc.setAddress(address);
+                doc.addRecord();
+                displayMenu();
 
-                default:
-                    cout << "Unknown Command";
-                    break;
-            }
-            cout << "enter your command: ";
-            cin >> cmd;
+                break;
+            case 2:
+                cout << "Enter Appointment ID , Appointment Date, Doctor Id\n";
+                cin >> appId >> date >> docId;
+                App.setAppointmentID(appId);
+                App.setAppointmentDate(date);
+                App.setDocID(docId);
+                App.addAppRecord();
+                displayMenu();
+
+                break;
+            case 3:
+                cout << "Enter the record ID you want to update\n";
+                cin >> id;
+                cout << "Enter new Name\n";
+                cin >> name;
+                doc.updateDoc(name, id);
+                displayMenu();
+
+                break;
+            case 4:
+                cout << "Enter the record ID you want to update\n";
+                cin >> appId;
+                cout << "Enter new date\n";
+                cin >> date;
+                doc.updateDoc(date, appId);
+                displayMenu();
+
+                break;
+            case 5:
+                cout << "Enter the record ID and Name you want to delete\n";
+                cin >> id >> name;
+                doc.deleteRecord(name, id);
+                displayMenu();
+
+                break;
+
+            case 6:
+                cout << "Enter the record ID and Date you want to delete\n";
+                cin >> appId >> date;
+                App.deleteAppRecord(date, appId);
+                displayMenu();
+
+                break;
+            case 7:
+                cout << "Enter the doctor Id\n";
+                cin >> id;
+                cout << sDoc.searchByDocId(id) << endl;
+                displayMenu();
+
+                break;
+            case 8:
+                cout << "Enter the Appointment Id\n";
+                cin >> appId;
+                cout << sApp.searchByAppId(appId) << endl;
+                displayMenu();
+
+                break;
+
+            case 9:
+                cout << "Enter your query: ";
+                cin.sync();
+                getline(cin, query);
+                queryHandler.executeQuery(query);
+                displayMenu();
+
+                break;
+            case 0:
+                return 0;
+            default:
+                break;
         }
+    }
+//    Doctor d("D008", "Bassem", "123 Main Street");
+//    Doctor d1("D002", "Hamed", "123 Main Street");
+//    Doctor d2("D003", "Bassem", "123 Main Street");
+//    Doctor d3("D004", "Ahmed", "123 Main Street");
+//    d.addRecord();
+//    d1.addRecord();
+//    d3.addRecord();
+//    d2.addRecord();
+//    Appointment a("A001", "2021-12-01", "D002");
+//    Appointment a2("A002", "2021-12-01", "D002");
+//    Appointment a3("A003", "2021-12-01", "D002");
+//    a.addAppRecord();
+//    a2.addAppRecord();
+//    a3.addAppRecord();
+//    ind.insertAppRecordSec("D002", "A001");
+
+
     ////////////////////////////////////////////
 
 
