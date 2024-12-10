@@ -11,7 +11,7 @@ using namespace std;
 map<string, int> Appointment::appointmentMap;
 
 int Appointment::readLastLine() {
-    string filename = "../data/Appointment_Avail_list.txt";
+    string filename = "data/Appointment_Avail_list.txt";
     fstream file(filename, std::ios::in | std::ios::ate | ios::out);
     if (!file.is_open()) {
         throw ios_base::failure("Failed to open file");
@@ -43,7 +43,14 @@ int Appointment::readLastLine() {
     outFile << updatedContent;
     outFile.close();
 
-    return stoi(lastLine);
+    // Extract the integer part from lastLine
+    std::istringstream iss(lastLine);
+    int extractedNumber;
+    if (!(iss >> extractedNumber)) {
+        return -1; // Return -1 if no valid integer found
+    }
+
+    return extractedNumber; // Return the extracted integer
 }
 
 
@@ -77,7 +84,7 @@ void Appointment::setDocID(const char *docID) {
 // Add Record
 void Appointment::addAppRecord() {
     int actualLength;
-    fstream file(R"(../data/appointments.txt)", ios::in | ios::out | ios::binary | ios::app);
+    fstream file(R"(data/appointments.txt)", ios::in | ios::out | ios::binary | ios::app);
     if (!file.is_open()) {
         cerr << "Failed to open the file.\n";
         return;
@@ -114,7 +121,7 @@ void Appointment::deleteAppRecord(const string &docId, const string &appId) {
         return;
     }
 
-    fstream file(R"(../data/appointments.txt)", ios::in | ios::out | ios::binary);
+    fstream file(R"(data/appointments.txt)", ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file for deletion.\n";
         return;
@@ -136,7 +143,7 @@ void Appointment::updateAppointmentDate(const char *date, const string &id) {
         return;
     }
 
-    fstream file(R"(../data/appointments.txt)", ios::in | ios::out | ios::binary);
+    fstream file(R"(data/appointments.txt)", ios::in | ios::out | ios::binary);
     if (!file.is_open()) {
         cerr << "Failed to open the file for updating.\n";
         return;
@@ -167,5 +174,3 @@ void Appointment::updateAppointmentDate(const char *date, const string &id) {
     file.write(m, sizeof(m));
     file.close();
 }
-
-

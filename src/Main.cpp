@@ -22,27 +22,6 @@ void displayMenu() {
     std::cout << "Enter choice: ";
 }
 
-/*int main() {
-    int choice;
-    displayMenu();
-    std::cin >> choice;
-
-    FileManager fileManager;
-    // Variables for doctor and appointment
-
-    // Logic to handle different menu choices
-    switch (choice) {
-        case 1:
-            // Add new doctor
-            break;
-        case 2:
-            // Add new appointment
-            break;
-            // Other cases
-    }
-
-    return 0;
-}*/
 int main() {
     Doctor d("D008", "Bassem", "123 Main Street");
     Doctor d1("D002", "Hamed", "123 Main Street");
@@ -58,52 +37,54 @@ int main() {
     a.addAppRecord();
     a2.addAppRecord();
     a3.addAppRecord();
+
+
+
 //    ind.insertAppRecordSec("D002", "A001");
-//    QueryHandler queryHandler;
-//    cout << "Enter your query: ";
-//    cin.sync();
-//    string query;
-//    getline(cin, query);
-//    queryHandler.executeQuery(query);
+    QueryHandler queryHandler;
+    cout << "Enter your query: ";
+    cin.sync();
+    string query;
+    getline(cin, query);
+    queryHandler.executeQuery(query);
 
-    // //    d.deleteRecord("Bassem", "D003");
-    //     BinarySearch s;
-    //     cout << s.searchByDocId("D003");
-    //     cout << s.searchByDocName("Hamed");
-    //    d.printMap();
-    ///////////////////////////////////////////////
-    //    int cmd;
-    //    cin >> cmd;
-    //    Doctor dIn;
-    //    char id[15], name[30], address[30];
-    //    while (cmd != -1) {
-    //        switch (cmd) {
-    //            case 0:
-    //                cin >> id >> name >> address;
-    //                dIn.setID(id);
-    //                dIn.setName(name);
-    //                dIn.setAddress(address);
-    //                dIn.addRecord();
-    //                break;
-    //            case 1:
-    //                cin >> id;
-    //                dIn.deleteRecord(id);
-    //                break;
-    //
-    //            default:
-    //                cout << "Unknown Command";
-    //                break;
-    //        }
-    //        cout << "enter your command: ";
-    //        cin >> cmd;
-    //    }
-    //////////////////////////////////////////////
-    //
+     //    d.deleteRecord("Bassem", "D003");
+         BinarySearch s;
+         cout << s.searchByDocId("D003");
+         cout << s.searchByDocName("Hamed");
+        d.printMap();
+    /////////////////////////////////////////////
+        int cmd;
+        cin >> cmd;
+        Doctor dIn;
+        char id[15], name[30], address[30];
+        while (cmd != -1) {
+            switch (cmd) {
+                case 0:
+                    cin >> id >> name >> address;
+                    dIn.setID(id);
+                    dIn.setName(name);
+                    dIn.setAddress(address);
+                    dIn.addRecord();
+                    break;
+                case 1:
+                    cin >> id >> name;
+                    dIn.deleteRecord(name, id);
+                    break;
 
-    //
-    //    Doctor d4("D004", "Dr. Jane", "456 Elm Street");
-    //    d4.addRecord();
-    //    d4.updatedoc("tone poe", "D004");
+                default:
+                    cout << "Unknown Command";
+                    break;
+            }
+            cout << "enter your command: ";
+            cin >> cmd;
+        }
+    ////////////////////////////////////////////
+
+
+        Doctor d4("D004", "Dr. Jane", "456 Elm Street");
+        d4.addRecord();
+//        d4.updatedoc("tone poe", "D004");
 
     return 0;
 }

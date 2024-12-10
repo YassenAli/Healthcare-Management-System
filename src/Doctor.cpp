@@ -1,7 +1,3 @@
-//
-// Created by Osama on 27/11/2024.
-//
-
 #include "Doctor.h"
 #include <iostream>
 #include <fstream>
@@ -10,30 +6,37 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 #include "IndexManager.h"
 
 map<string, int> Doctor::mp;
 using namespace std;
 
+bool isNumeric(const std::string& str) {
+    return !str.empty() && std::all_of(str.begin(), str.end(), ::isdigit);
+}
+
 int Doctor::readLastLine() {
-    string filename = "../data/Doctor_Avail_list.txt";
+    string filename = "data/Doctor_Avail_list.txt";
     fstream file(filename, std::ios::in | std::ios::ate | ios::out);
     if (!file.is_open()) {
-        throw ios_base::failure("Failed to open file");
+        throw ios_base::failure("Failed to open file. Line 22");
     }
     streamoff fileSize = file.tellg();
     if (fileSize == 0) {
-        return -1;
+        return -1; // File is empty
     }
+
     file.seekg(0, ios::beg);
     ostringstream buffer;
     buffer << file.rdbuf();
     file.close();
     string content = buffer.str();
-    size_t lastNewline = content.find_last_of('|');
 
+    size_t lastNewline = content.find_last_of('|');
     string lastLine;
     string updatedContent;
+
     if (lastNewline == string::npos) {
         lastLine = content;
         updatedContent = "";
@@ -41,6 +44,8 @@ int Doctor::readLastLine() {
         lastLine = content.substr(lastNewline + 1);
         updatedContent = content.substr(0, lastNewline);
     }
+
+    // Open file to update content (truncate)
     ofstream outFile(filename, ios::trunc);
     if (!outFile.is_open()) {
         throw ios_base::failure("Failed to open file for writing");
@@ -48,8 +53,16 @@ int Doctor::readLastLine() {
     outFile << updatedContent;
     outFile.close();
 
-    return stoi(lastLine);
+    // Extract the integer part from lastLine
+    std::istringstream iss(lastLine);
+    int extractedNumber;
+    if (!(iss >> extractedNumber)) {
+        return -1; // Return -1 if no valid integer found
+    }
+
+    return extractedNumber; // Return the extracted integer
 }
+
 
 Doctor::Doctor() {
     strncpy(doctorID, "0", sizeof(doctorID) - 1);
@@ -78,10 +91,11 @@ void Doctor::setAddress(const char *address) {
 
 void Doctor::addRecord() {
     int actualLength;
-    fstream file(R"(../data/doctors.txt)",
-                 ios::in | ios::out | ios::binary);
+    string filename = "data/Doctor_Avail_list.txt";
+    fstream file(filename, std::ios::in | std::ios::ate | ios :: out | ios :: app);
     if (!file.is_open()) {
-        cerr << "Failed to open the file.\n";
+//        cout<<file.fail();
+        cerr << "Failed to open the file. Line 84\n";
         return;
     }
 //    if (mp.empty() && !file.eof()) {
@@ -114,9 +128,9 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
         cerr << "Record with ID " << id << " not found.\n";
         return;
     }
-    fstream file(R"(../data/doctors.txt)",
+    fstream file(R"(data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
-    string filename = "../data/Doctor_Avail_list.txt";
+    string filename = "data/Doctor_Avail_list.txt";
     fstream file1(filename, std::ios::in | std::ios::ate | ios::out | ios::app);
     if (file.is_open()) {
         int pos = mp[id];
@@ -134,7 +148,7 @@ void Doctor::deleteRecord(const string &docName, const string &id) {
 }
 
 void Doctor::updateDoc(const char *name, string id) {
-    fstream file(R"(../data/doctors.txt)",
+    fstream file(R"(data/doctors.txt)",
                  ios::in | ios::out | ios::binary);
     if (file.is_open()) {
         int pos = mp[id];
@@ -187,8 +201,16 @@ void Doctor::initialize_map(
         for (int i = 5; i < line.length(); ++i) {
             initial_offset += line[i];
         }
-        int offset = stoi(initial_offset);
+        // Convert `initial_offset` to an integer without using `stoi`
+        int offset = 0;
+        for (char c : initial_offset) {
+            if (isdigit(c)) {
+                offset = offset * 10 + (c - '0');
+            } else {
+                break; // Stop parsing if a non-digit character is encountered
+            }
+        }
+
         mp.insert({id, offset});
     }
-
 }

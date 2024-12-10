@@ -24,7 +24,7 @@ public:
     //////////////////////Search by Doctor Id/////////////////////////////////
     string searchByDocId(const string &target)
     {
-        readPrim("../data/doc_index.txt", primary_doc_index);
+        readPrim("data/doc_index.txt", primary_doc_index);
         int first = 0;
         int last = primary_doc_index.size() - 1;
         int mid;
@@ -53,7 +53,7 @@ public:
     /////////////////////Search by Appointment ID////////////////////////////
     string searchByAppId(const string &target)
     {
-        readPrim("../data/appointment_index.txt", primary_app_index);
+        readPrim("data/appointment_index.txt", primary_app_index);
         int first = 0;
         int last = primary_app_index.size() - 1;
         int mid;
@@ -83,7 +83,7 @@ public:
     string searchByDocName(const string &DoctorName)
     {
         PersonNode *head = nullptr;
-        readFileToLinkedList("../data/doc_sec_index.txt", head);
+        readFileToLinkedList("data/doc_sec_index.txt", head);
 
         vector<PersonNode *> vec = convertLinkedListToVector(head);
         PersonNode *personNode = binarySearchByName(vec, DoctorName);
@@ -104,7 +104,7 @@ public:
     string searchAppByDocId(const string &DocID)
     {
         PersonNode *head = nullptr;
-        readFileToLinkedList("../data/app_sec_index.txt", head);
+        readFileToLinkedList("data/app_sec_index.txt", head);
 
         vector<PersonNode *> vec = convertLinkedListToVector(head);
         PersonNode *personNode = binarySearchByName(vec, DocID);

@@ -13,7 +13,7 @@ map<string, IndexManager::Node *> IndexManager::appointmentSecIndex;
 ////////////////////Doctor Primary Indexes////////////////////////////////////////
 
 void IndexManager::insertDocRecord(string const &docId, int recPosition) {
-    fstream docIndFile(R"(../data/doc_index.txt)",
+    fstream docIndFile(R"(data/doc_index.txt)",
                        ios::in | ios::out | ios::binary);
     if (!docIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -32,7 +32,7 @@ void IndexManager::insertDocRecord(string const &docId, int recPosition) {
 }
 
 void IndexManager::deleteDocRecord(const string &docId) {
-    fstream docIndFile(R"(../data/doc_index.txt)",
+    fstream docIndFile(R"(data/doc_index.txt)",
                        ios::in | ios::out | ios::trunc);
     if (!docIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -50,7 +50,7 @@ void IndexManager::deleteDocRecord(const string &docId) {
 //////////////////Doctor Secondary Indexes////////////////////////////////////////
 
 void IndexManager::insertDocRecordSec(const string &docName, const string &docId) {
-    fstream docSecFile(R"(../data/doc_sec_index.txt)",
+    fstream docSecFile(R"(data/doc_sec_index.txt)",
                        ios::in | ios::out);
     if (!docSecFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -73,7 +73,7 @@ void IndexManager::insertDocRecordSec(const string &docName, const string &docId
 }
 
 void IndexManager::deleteDocRecordSec(const string &docName, const string &docId) {
-    fstream docSecFile(R"(../data/doc_sec_index.txt)",
+    fstream docSecFile(R"(data/doc_sec_index.txt)",
                        ios::in | ios::out | ios::trunc);
     if (!docSecFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -122,7 +122,7 @@ void IndexManager::deleteDocRecordSec(const string &docName, const string &docId
 /////////////////////Appointment Primary Indexes//////////////////////////////
 
 void IndexManager::insertAppRecord(string const &appId, int recPosition) {
-    fstream appIndFile(R"(../data/appointment_index.txt)",
+    fstream appIndFile(R"(data/appointment_index.txt)",
                        ios::in | ios::out | ios::binary);
     if (!appIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -142,7 +142,7 @@ void IndexManager::insertAppRecord(string const &appId, int recPosition) {
 }
 
 void IndexManager::deleteAppRecord(const string &appId) {
-    fstream appIndFile(R"(../data/appointment_index.txt)",
+    fstream appIndFile(R"(data/appointment_index.txt)",
                        ios::in | ios::out | ios::trunc);
     if (!appIndFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -160,7 +160,7 @@ void IndexManager::deleteAppRecord(const string &appId) {
 
 ////////////////Appointment Secondary Indexes/////////////////////////////////////
 void IndexManager::insertAppRecordSec(const string &docId, const string &appId) {
-    fstream appSecFile(R"(../data/app_sec_index.txt)",
+    fstream appSecFile(R"(data/app_sec_index.txt)",
                        ios::in | ios::out);
     if (!appSecFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -179,11 +179,10 @@ void IndexManager::insertAppRecordSec(const string &docId, const string &appId) 
         current->next = new Node(docId);
     }
     write_to_sec_file(appSecFile, appointmentSecIndex);
-
 }
 
 void IndexManager::deleteAppRecordSec(const string &docId, const string &appId) {
-    fstream appSecFile(R"(../data/app_sec_index.txt)",
+    fstream appSecFile(R"(data/app_sec_index.txt)",
                        ios::in | ios::out | ios::trunc);
     if (!appSecFile.is_open()) {
         cerr << "Failed to open index file.\n";
@@ -194,7 +193,6 @@ void IndexManager::deleteAppRecordSec(const string &docId, const string &appId) 
         initialize_sec_map(appSecFile, appointmentSecIndex);//initializing the map if its empty and the data file isn't empty
     }
     if (appointmentSecIndex.find(appId) == appointmentSecIndex.end())return;
-
 
 
 //0 1 2 3 4
@@ -226,7 +224,6 @@ void IndexManager::deleteAppRecordSec(const string &docId, const string &appId) 
     cerr << "Id is not found";
     write_to_sec_file(appSecFile, appointmentSecIndex);
     appSecFile.close();
-
 }
 
 ///////////////////////////////////Shared Functions////////////////////////////////////////
@@ -240,19 +237,36 @@ void IndexManager::initialize_map(fstream &file, map<string, int> &map) {
         string id;
         string initial_offset;
         getline(file, line, '\n');
+
+        if (line.empty()) {
+            continue; // Skip empty lines
+        }
+
+        // Extract the ID (first 4 characters)
         id += line[0];
         id += line[1];
         id += line[2];
         id += line[3];
 
+        // Extract the offset (characters after index 4)
         for (int i = 5; i < line.length(); ++i) {
             initial_offset += line[i];
         }
-        int offset = stoi(initial_offset);
+
+        // Convert `initial_offset` to an integer without using `stoi`
+        int offset = 0;
+        for (char c : initial_offset) {
+            if (isdigit(c)) {
+                offset = offset * 10 + (c - '0');
+            } else {
+                break; // Stop parsing if a non-digit character is encountered
+            }
+        }
+
         map.insert({id, offset});
     }
-
 }
+
 
 //Function to write from map to the index file
 void IndexManager::write_to_file(fstream &file, map<string, int> const &map) {
@@ -470,13 +484,3 @@ bool IndexManager::isFileEmpty(fstream &file) {
 ////        }
 ////    }
 //};
-
-
-
-
-
-
-
-
-
-
